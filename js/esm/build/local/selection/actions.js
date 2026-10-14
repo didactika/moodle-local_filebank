@@ -1,4 +1,7 @@
 import e from"@moodle/lms/local_filebank/local/selection/selectors";import{formControl as b}from"@moodle/lms/local_filebank/local/dom";import{eventElement as u}from"@moodle/lms/local_filebank/local/listeners";import{getString as k}from"@moodle/lms/core/stringUtils";import{loadFragment as w}from"@moodle/lms/local_filebank/local/repository";import g from"@moodle/lms/local_filebank/compat/templates";import I from"@moodle/lms/local_filebank/compat/notification";/**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * Native picker entry and documented embedded-chooser completion.
  *
  * @module local_filebank/local/selection/actions

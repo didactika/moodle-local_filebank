@@ -117,9 +117,8 @@ class behat_local_filebank_steps_5 extends behat_local_filebank_base {
             'window.filebankEditor=null;const editable=document.getElementById("id_introeditoreditable");'
             . 'if(editable){window.filebankEditor={getBody:()=>editable};}else{require(["editor_tiny/editor"],module=>'
             . '{window.filebankEditor=module.getInstanceForElementId("id_introeditor");});}'
-            . 'window.filebankReceipt=null;fetch(M.cfg.wwwroot+"/local/filebank/selection/status.php?"'
-            . '+new URLSearchParams({scope:window.filebankTestScope,sesskey:M.cfg.sesskey}))'
-            . '.then(response=>response.json()).then(result=>{window.filebankReceipt=result;});'
+            . 'window.filebankReceipt=null;require(["core/ajax"],Ajax=>{Ajax.call([{methodname:"local_filebank_get_import_status",'
+            . 'args:{scope:window.filebankTestScope}}])[0].then(result=>{window.filebankReceipt=result;return result;});});'
         );
         foreach (array_map('trim', explode(',', $names)) as $name) {
             if (

@@ -48,17 +48,8 @@ final class plan_history {
                     throw new \moodle_exception('lockfailed', 'local_filebank');
                 }
                 $locks[] = $lock;
-                if (
-                    $DB->record_exists_select(
-                        'local_filebank_run',
-                        'planid = ? AND (state = ? OR state = ?)',
-                        [$id, 'queued', 'running']
-                    )
-                ) {
-                    throw new \moodle_exception('migrationinuse', 'local_filebank');
-                }
-                $DB->get_record('local_filebank_plan', ['id' => $id], '*', MUST_EXIST);
             }
+            self::require_removable($ids);
             $transaction = $DB->start_delegated_transaction();
             foreach ($ids as $id) {
                 self::remove_plan($id);
@@ -68,6 +59,28 @@ final class plan_history {
             foreach (array_reverse($locks) as $lock) {
                 $lock->release();
             }
+        }
+    }
+
+    /**
+     * Require that every plan exists and that none of them is queued or running.
+     *
+     * @param int[] $ids Plans.
+     */
+    private static function require_removable(array $ids): void {
+        global $DB;
+        [$insql, $params] = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'plan');
+        if (
+            $DB->record_exists_select(
+                'local_filebank_run',
+                'planid ' . $insql . ' AND (state = :queued OR state = :running)',
+                $params + ['queued' => 'queued', 'running' => 'running']
+            )
+        ) {
+            throw new \moodle_exception('migrationinuse', 'local_filebank');
+        }
+        if ($DB->count_records_select('local_filebank_plan', 'id ' . $insql, $params) !== count($ids)) {
+            throw new \dml_missing_record_exception('local_filebank_plan');
         }
     }
 

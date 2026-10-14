@@ -45,13 +45,46 @@ final class provider implements
     public static function get_metadata(
         \core_privacy\local\metadata\collection $collection
     ): \core_privacy\local\metadata\collection {
-        foreach (self::TABLES as $suffix) {
-            $collection->add_database_table(
-                'local_filebank_' . $suffix,
-                ['userid' => 'privacy_userid'],
-                'privacy_metadata'
-            );
-        }
+        $collection->add_database_table(
+            'local_filebank_revision',
+            ['userid' => 'privacy_userid'],
+            'privacy_metadata'
+        );
+        $collection->add_database_table(
+            'local_filebank_policy',
+            ['userid' => 'privacy_userid'],
+            'privacy_metadata'
+        );
+        $collection->add_database_table(
+            'local_filebank_publish',
+            ['userid' => 'privacy_userid'],
+            'privacy_metadata'
+        );
+        $collection->add_database_table(
+            'local_filebank_author',
+            ['userid' => 'privacy_userid'],
+            'privacy_metadata'
+        );
+        $collection->add_database_table(
+            'local_filebank_origin',
+            ['userid' => 'privacy_userid'],
+            'privacy_metadata'
+        );
+        $collection->add_database_table(
+            'local_filebank_plan',
+            ['userid' => 'privacy_userid'],
+            'privacy_metadata'
+        );
+        $collection->add_database_table(
+            'local_filebank_run',
+            ['userid' => 'privacy_userid'],
+            'privacy_metadata'
+        );
+        $collection->add_database_table(
+            'local_filebank_log',
+            ['userid' => 'privacy_userid'],
+            'privacy_metadata'
+        );
         return $collection;
     }
 

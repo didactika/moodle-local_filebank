@@ -111,24 +111,19 @@ final class migration_groups {
      * @return array Result.
      */
     private static function courses(int $planid, array $groups): array {
-        global $DB;
+        $counts = self::counts($planid);
         $coursegroups = [];
-        foreach ($groups as &$group) {
-            $conditions = ['planid' => $planid, 'sourcecourseid' => $group['groupcourseid'],
-                'sourcecmid' => $group['groupcmid']];
-            $grouptotal = $DB->count_records('local_filebank_operation', $conditions);
-            $groupincluded = $DB->count_records('local_filebank_operation', $conditions + ['included' => 1]);
+        foreach ($groups as $group) {
+            [$grouptotal, $groupincluded] = $counts['folders'][$group['groupcourseid'] . ':' . $group['groupcmid']] ?? [0, 0];
             $group['grouptotal'] = $grouptotal;
             $group['groupincluded'] = $groupincluded;
             $group['groupchecked'] = $grouptotal > 0 && $groupincluded === $grouptotal;
             $group['grouppartial'] = $groupincluded > 0 && !$group['groupchecked'];
             $key = $group['groupcourseid'] . ':' . $group['targetcourse'];
             if (!isset($coursegroups[$key])) {
+                [$total, $included] = $counts['courses'][$group['groupcourseid']] ?? [0, 0];
                 $coursegroups[$key] = $group;
                 $coursegroups[$key]['folders'] = [];
-                $conditions = ['planid' => $planid, 'sourcecourseid' => $group['groupcourseid']];
-                $total = $DB->count_records('local_filebank_operation', $conditions);
-                $included = $DB->count_records('local_filebank_operation', $conditions + ['included' => 1]);
                 $coursegroups[$key]['coursetotal'] = $total;
                 $coursegroups[$key]['courseincluded'] = $included;
                 $coursegroups[$key]['coursechecked'] = $total > 0 && $total === $included;
@@ -136,8 +131,32 @@ final class migration_groups {
             }
             $coursegroups[$key]['folders'][] = $group;
         }
-        unset($group);
         return array_values($coursegroups);
+    }
+
+    /**
+     * How many operations each source folder and each source course of a plan has, and how many of them are included.
+     *
+     * @param int $planid Plan.
+     * @return array The [total, included] pairs of the folders, by course and folder, and of the courses, by course.
+     */
+    private static function counts(int $planid): array {
+        global $DB;
+        $rows = $DB->get_records_sql(
+            'SELECT MIN(id) AS id, sourcecourseid, sourcecmid, COUNT(1) AS total, SUM(included) AS included
+               FROM {local_filebank_operation}
+              WHERE planid = :planid
+           GROUP BY sourcecourseid, sourcecmid',
+            ['planid' => $planid]
+        );
+        $counts = ['folders' => [], 'courses' => []];
+        foreach ($rows as $row) {
+            $pair = [(int)$row->total, (int)$row->included];
+            $counts['folders'][$row->sourcecourseid . ':' . $row->sourcecmid] = $pair;
+            $course = $counts['courses'][$row->sourcecourseid] ?? [0, 0];
+            $counts['courses'][$row->sourcecourseid] = [$course[0] + $pair[0], $course[1] + $pair[1]];
+        }
+        return $counts;
     }
 
     /**

@@ -1,4 +1,7 @@
 import{listen as i}from"@moodle/lms/local_filebank/local/listeners";/**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * Bind feature events to scoped actions without owning business state.
  *
  * @module local_filebank/local/migration/listeners

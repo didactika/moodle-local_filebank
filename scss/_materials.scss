@@ -17,10 +17,10 @@
     border-radius: var(--filebank-radius);
     cursor: pointer;
     transition: border-color .15s ease;
-    .card-body {
+    & .card-body {
         gap: .5rem;
     }
-    input[type=checkbox] {
+    & input[type=checkbox] {
         margin-top: .3rem;
         /* The native checkbox uses the theme color where supported. */
         /* stylelint-disable-next-line csstree/validator, property-no-unknown */
@@ -103,7 +103,7 @@
 }
 
 .filebank-browser {
-    .filebank-open.btn {
+    & .filebank-open.btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -136,7 +136,7 @@
 
 .filebank-browser {
     &[data-layout=list] {
-        .filebank-cards {
+        & .filebank-cards {
             grid-template-columns: 1fr;
         }
     }
@@ -166,11 +166,11 @@
         background: var(--filebank-host-background, #fff);
         z-index: 10;
     }
-    .filebank-open.btn:hover {
+    & .filebank-open.btn:hover {
         background: color-mix(in srgb, var(--filebank-primary) 22%, #fff);
         color: var(--filebank-primary);
     }
-    .filebank-open.btn:focus-visible {
+    & .filebank-open.btn:focus-visible {
         outline: 2px solid var(--filebank-primary);
         outline-offset: 2px;
     }

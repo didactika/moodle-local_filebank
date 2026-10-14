@@ -1,4 +1,7 @@
 import n from"@moodle/lms/local_filebank/local/selectors";import{eventElement as d}from"@moodle/lms/local_filebank/local/listeners";/**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * Native picker entry and documented embedded-chooser completion.
  *
  * @module local_filebank/local/picker/bridge

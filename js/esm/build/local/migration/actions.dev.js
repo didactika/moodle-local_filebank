@@ -1,6 +1,9 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 /**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * Serialized automatic selections and bounded review navigation through core Fragment.
  * @module local_filebank/local/migration/actions
  * @copyright 2026 Didactika.org

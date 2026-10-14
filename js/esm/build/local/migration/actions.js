@@ -1,4 +1,7 @@
 import i from"@moodle/lms/local_filebank/local/migration/selectors";import{eventElement as m}from"@moodle/lms/local_filebank/local/listeners";import{loadFragment as _}from"@moodle/lms/local_filebank/local/repository";import j from"@moodle/lms/local_filebank/compat/templates";import J from"@moodle/lms/local_filebank/compat/notification";import{getStrings as Q}from"@moodle/lms/core/stringUtils";/**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * Serialized automatic selections and bounded review navigation through core Fragment.
  * @module local_filebank/local/migration/actions
  * @copyright 2026 Didactika.org

@@ -49,8 +49,7 @@ final class draft_scope {
      * @return string Matching token, or empty when no native form has registered this draft.
      */
     public static function find(\context $context, int $draftid, string $sesskey): string {
-        global $SESSION;
-        foreach ($SESSION->local_filebank_drafts ?? [] as $token => $scope) {
+        foreach (draft_store::all() as $token => $scope) {
             if ($scope['contextid'] === $context->id && $scope['draftid'] === $draftid) {
                 try {
                     self::resolve($token, $sesskey);
@@ -154,7 +153,7 @@ final class draft_scope {
      */
     public static function open_contract(array $contract, \context $context, string $basepath = '/'): string {
 
-        global $SESSION, $USER;
+        global $USER;
         self::require_context($context, $contract['field']);
         $basepath = material_selection::path($basepath);
         if (
@@ -176,7 +175,7 @@ final class draft_scope {
         $scopes[$token] = $contract + ['userid' => (int)$USER->id, 'contextid' => $context->id,
             'courseid' => (int)$context->get_course_context()->instanceid, 'basepath' => $basepath,
             'expires' => time() + self::LIFETIME];
-        $SESSION->local_filebank_drafts = $scopes;
+        draft_store::replace($scopes);
         return $token;
     }
 
@@ -211,9 +210,8 @@ final class draft_scope {
      * @param string $sesskey Current session key.
      */
     public static function close(string $token, string $sesskey): void {
-        global $SESSION;
         self::resolve($token, $sesskey);
-        unset($SESSION->local_filebank_drafts[$token]);
+        draft_store::forget($token);
     }
 
     /**
@@ -224,11 +222,11 @@ final class draft_scope {
      * @return array Current authority.
      */
     private static function resolve(string $token, string $sesskey): array {
-        global $CFG, $SESSION, $USER;
+        global $CFG, $USER;
         if (!confirm_sesskey($sesskey)) {
             throw new \moodle_exception('invalidsesskey');
         }
-        $scope = $SESSION->local_filebank_drafts[$token] ?? null;
+        $scope = draft_store::find($token);
         if (
             !preg_match('/^[a-f0-9]{64}$/', $token) || !$scope
                 || $scope['userid'] !== (int)$USER->id || $scope['expires'] <= time()
@@ -274,8 +272,8 @@ final class draft_scope {
      * @return array Result.
      */
     private static function prune(array $contract, \context $context): array {
-        global $SESSION, $USER;
-        $scopes = $SESSION->local_filebank_drafts ?? [];
+        global $USER;
+        $scopes = draft_store::all();
         foreach ($scopes as $key => $scope) {
             if (
                 $scope['expires'] <= time() || $scope['userid'] !== (int)$USER->id

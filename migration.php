@@ -25,4 +25,5 @@
 
 require_once(__DIR__ . '/../../config.php');
 require_login();
+require_capability('local/filebank:planmigration', context_system::instance());
 require(__DIR__ . '/admin/migration.php');

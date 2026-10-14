@@ -1,4 +1,7 @@
 import o from"@moodle/lms/local_filebank/local/admin/selectors";import{createBulkActions as r,createHistoryActions as i}from"@moodle/lms/local_filebank/local/admin/actions";import{registerBulk as c,registerHistory as n,registerPagination as s}from"@moodle/lms/local_filebank/local/admin/listeners";/**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * admin controller.
  * @module local_filebank/local/admin/controller
  * @copyright 2026 Didactika.org

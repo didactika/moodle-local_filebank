@@ -75,7 +75,7 @@ final class migration_report {
         }
         foreach (['' => $total] + $counts as $key => $count) {
             $data['filters'][] = ['label' => get_string($key === '' ? 'allfiles' : 'metric_' . $key, 'local_filebank'),
-                'count' => $count, 'active' => $decision === $key,
+                'count' => $count, 'active' => $decision === $key, 'current' => $decision === $key ? 'page' : '',
                 'url' => (new \moodle_url($url, ['decision' => $key, 'q' => $search]))->out(false)];
         }
         [$condition, $params] = self::query($planid, $decision, $search);
@@ -178,7 +178,7 @@ final class migration_report {
         if ($search !== '') {
             // Cross-database text search covers immutable file/folder snapshots and current course shortnames.
             $condition .= ' AND (' . $DB->sql_like('snapshot', ':snapshotsearch', false)
-                . ' OR targetcmid IN (SELECT cm.id FROM {course_modules} cm JOIN {course} c ON c.id = cm.course WHERE '
+                . ' OR EXISTS (SELECT 1 FROM {course_modules} cm JOIN {course} c ON c.id = cm.course WHERE cm.id = targetcmid AND '
                 . $DB->sql_like('c.shortname', ':coursesearch', false) . '))';
             $params['snapshotsearch'] = '%' . $DB->sql_like_escape($search) . '%';
             $params['coursesearch'] = $params['snapshotsearch'];

@@ -82,9 +82,10 @@ final class migration_pairs {
 
         $pairs = [];
         $members = $DB->get_records('local_filebank_course', ['revisionid' => $revision->id], 'courseid');
+        $courses = $members ? $DB->get_records_list('course', 'id', array_column($members, 'courseid')) : [];
         foreach ($members as $member) {
             self::member(
-                (int)$member->courseid,
+                $courses[$member->courseid] ?? null,
                 $rules,
                 $scopekey,
                 $scopecapture,
@@ -100,7 +101,7 @@ final class migration_pairs {
     /**
      * Member.
      *
-     * @param int $courseid Candidate course.
+     * @param \stdClass|null $course Candidate course, or null when it no longer exists.
      * @param \local_filebank\local\profile\profile_config $rules Rules.
      * @param string $scopekey Scopekey.
      * @param string $scopecapture Scopecapture.
@@ -110,7 +111,7 @@ final class migration_pairs {
      * @param array $pairs Pairs.
      */
     private static function member(
-        int $courseid,
+        ?\stdClass $course,
         \local_filebank\local\profile\profile_config $rules,
         string $scopekey,
         string $scopecapture,
@@ -120,9 +121,6 @@ final class migration_pairs {
         array &$pairs
     ): void {
 
-        global $DB;
-
-        $course = $DB->get_record('course', ['id' => $courseid]);
         if (!$course || !($identity = $rules->resolve($course))) {
             return;
         }

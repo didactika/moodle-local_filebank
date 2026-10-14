@@ -37,7 +37,7 @@
         font-weight: 600;
         overflow-wrap: anywhere;
     }
-    .filebank-disclosure-icon {
+    & .filebank-disclosure-icon {
         width: 1.4rem;
         height: 1.4rem;
         border: 0;
@@ -51,7 +51,7 @@
     &:hover {
         background: color-mix(in srgb, var(--filebank-primary) 5%, var(--filebank-surface));
     }
-    .badge {
+    & .badge {
         margin: .25rem 0;
         white-space: normal;
         flex-shrink: 0;

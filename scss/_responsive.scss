@@ -12,7 +12,7 @@
         padding-inline: .5rem;
     }
     .filebank-native-host {
-        .fp-repo-area {
+        & .fp-repo-area {
             width: 100%;
             max-width: 100%;
             /* Override native Boost layout utilities at compact widths. */
@@ -22,18 +22,18 @@
             overflow-x: auto;
             padding-bottom: .5rem;
         }
-        .fp-repo {
+        & .fp-repo {
             flex-shrink: 0;
         }
-        .fp-repo a {
+        & .fp-repo a {
             white-space: nowrap;
         }
-        .fp-repo-area + div {
+        & .fp-repo-area + div {
             width: 100%;
             max-width: 100%;
             min-width: 0;
         }
-        .fp-repo-items {
+        & .fp-repo-items {
             width: 100%;
         }
     }
@@ -47,7 +47,7 @@
     }
     .filebank-steps {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        li {
+        & li {
             padding: .5rem;
         }
     }
@@ -64,7 +64,7 @@
         transition: none;
     }
     .filebank-skeleton {
-        span {
+        & span {
             animation: none;
         }
     }

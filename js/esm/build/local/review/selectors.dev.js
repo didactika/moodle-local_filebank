@@ -1,4 +1,7 @@
 /**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * DOM contract for this feature.
  *
  * @module local_filebank/local/review/selectors

@@ -58,11 +58,11 @@
 }
 
 .filebank-admin {
-    .mform #fgroup_id_buttons {
+    & .mform #fgroup_id_buttons {
         background: var(--filebank-surface);
         padding-block: .75rem;
     }
-    [hidden] {
+    & [hidden] {
         /* Boost utilities must retain accessible hidden states. */
         /* stylelint-disable-next-line declaration-no-important */
         display: none !important;

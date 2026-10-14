@@ -1,4 +1,7 @@
 import{useEffect as i,useRef as c,useState as f}from"react";import{normalizeLayout as l}from"./layout";import{Fragment as m,jsx as a,jsxs as d}from"react/jsx-runtime";/**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * Native Moodle 5.3 React layout selector with theme-overridable markup.
  *
  * @module local_filebank/ViewSelector

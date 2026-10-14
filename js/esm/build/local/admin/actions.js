@@ -1,4 +1,7 @@
 import l from"@moodle/lms/local_filebank/local/admin/selectors";import{formControl as y}from"@moodle/lms/local_filebank/local/dom";import{eventElement as H}from"@moodle/lms/local_filebank/local/listeners";import S from"@moodle/lms/local_filebank/compat/notification";import{loadFragment as M}from"@moodle/lms/local_filebank/local/repository";import{addToast as k}from"@moodle/lms/local_filebank/compat/toast";import{getStrings as L}from"@moodle/lms/core/stringUtils";/**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * Native list selection, confirmation and shared pagination controls.
  * @module local_filebank/local/admin/actions
  * @copyright 2026 Didactika.org

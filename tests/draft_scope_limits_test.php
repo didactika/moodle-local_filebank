@@ -31,6 +31,7 @@ use local_filebank\local\catalog\material_source;
 use local_filebank\local\profile\profiles;
 use local_filebank\local\selection\draft_scope;
 use local_filebank\local\selection\draft_state;
+use local_filebank\local\selection\draft_store;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -146,7 +147,6 @@ final class draft_scope_limits_test extends draft_scope_fixture {
      * Unclosed controls cannot grow session state without a bound.
      */
     public function test_scope_registry_is_bounded(): void {
-        global $SESSION;
         [$form, , , , $context] = $this->fixture();
         $control = $form->control();
         $firsttoken = '';
@@ -155,8 +155,9 @@ final class draft_scope_limits_test extends draft_scope_fixture {
             $token = $control->open_scope($context);
             $firsttoken = $firsttoken ?: $token;
         }
-        $this->assertCount(draft_scope::MAX_SCOPES, $SESSION->local_filebank_drafts);
-        $this->assertArrayNotHasKey($firsttoken, $SESSION->local_filebank_drafts);
-        $this->assertArrayHasKey($token, $SESSION->local_filebank_drafts);
+        $scopes = draft_store::all();
+        $this->assertCount(draft_scope::MAX_SCOPES, $scopes);
+        $this->assertArrayNotHasKey($firsttoken, $scopes);
+        $this->assertArrayHasKey($token, $scopes);
     }
 }

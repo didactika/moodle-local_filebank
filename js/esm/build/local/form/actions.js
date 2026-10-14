@@ -1,4 +1,7 @@
 import y from"@moodle/lms/local_filebank/local/form/selectors";import{getStrings as R}from"@moodle/lms/core/stringUtils";import w from"@moodle/lms/local_filebank/compat/templates";import T from"@moodle/lms/local_filebank/compat/notification";/**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * Accessible selection controls for native administration forms.
  *
  * @module local_filebank/local/form/actions

@@ -1,4 +1,7 @@
 import{appendLinks as a}from"@moodle/lms/local_filebank/local/editor/actions";import{getImportStatus as m}from"@moodle/lms/local_filebank/local/repository";import{getInstanceForElementId as s}from"@moodle/lms/local_filebank/compat/editor";import i from"@moodle/lms/local_filebank/compat/notification";import{getString as f}from"@moodle/lms/core/stringUtils";/**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * Native picker entry and documented embedded-chooser completion.
  *
  * @module local_filebank/local/editor/controller

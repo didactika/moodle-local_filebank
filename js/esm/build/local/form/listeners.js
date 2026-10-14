@@ -1,4 +1,7 @@
 import o from"@moodle/lms/local_filebank/local/form/selectors";import{listen as t,eventElement as c}from"@moodle/lms/local_filebank/local/listeners";/**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * form listeners.
  * @module local_filebank/local/form/listeners
  * @copyright 2026 Didactika.org

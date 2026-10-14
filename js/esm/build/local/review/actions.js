@@ -1,4 +1,7 @@
 import l from"@moodle/lms/local_filebank/local/review/selectors";import{eventElement as s}from"@moodle/lms/local_filebank/local/listeners";import{ModalSaveCancel as h,ModalEvents as d}from"@moodle/lms/local_filebank/compat/modal";import{getString as M}from"@moodle/lms/core/stringUtils";import T from"@moodle/lms/local_filebank/compat/templates";import H from"@moodle/lms/local_filebank/compat/notification";/**
+ * This file is part of Moodle - https://moodle.org/
+ * Moodle is free software under the GNU General Public License, version 3 or later.
+ *
  * Rename reviewed files through Moodle's native save/cancel modal.
  *
  * @module local_filebank/local/review/actions

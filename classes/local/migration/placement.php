@@ -77,11 +77,18 @@ final class placement {
         $strategy = $policy['strategy'] ?? 'ordinal';
         if ($strategy === 'mapping') {
             $id = (int)($policy['map'][(string)$section->id] ?? 0);
-            $matches = $DB->get_records('course_sections', ['id' => $id, 'course' => $targetcourse]);
+            $matches = $DB->get_records('course_sections', ['id' => $id, 'course' => $targetcourse], 'id', 'id', 0, 2);
         } else if ($strategy === 'name' && $section->name !== null && $section->name !== '') {
-            $matches = $DB->get_records('course_sections', ['course' => $targetcourse, 'name' => $section->name]);
+            $matches = $DB->get_records('course_sections', ['course' => $targetcourse, 'name' => $section->name], 'id', 'id', 0, 2);
         } else if ($strategy === 'ordinal') {
-            $matches = $DB->get_records('course_sections', ['course' => $targetcourse, 'section' => $section->section]);
+            $matches = $DB->get_records(
+                'course_sections',
+                ['course' => $targetcourse, 'section' => $section->section],
+                'id',
+                'id',
+                0,
+                2
+            );
         } else {
             throw new \moodle_exception('placementambiguous', 'local_filebank');
         }
