@@ -28,10 +28,10 @@ require_once($CFG->libdir . '/adminlib.php');
 
 admin_externalpage_setup('local_filebank_log');
 $action = optional_param('action', '', PARAM_ALPHANUMEXT);
-$entityuuid = optional_param('entityuuid', '', PARAM_RAW_TRIMMED);
+$entityuuid = optional_param('entityuuid', '', PARAM_ALPHANUMEXT);
 $before = optional_param('before', 0, PARAM_INT);
-$from = optional_param('from', '', PARAM_RAW_TRIMMED);
-$until = optional_param('until', '', PARAM_RAW_TRIMMED);
+$from = trim(optional_param('from', '', PARAM_TEXT));
+$until = trim(optional_param('until', '', PARAM_TEXT));
 $dates = [];
 foreach (['from' => $from, 'until' => $until] as $key => $value) {
     if ($value === '') {

@@ -16,16 +16,16 @@
         display: none;
     }
     &[data-layout=tree] {
-        .filebank-browser-folder {
+        & .filebank-browser-folder {
             display: block;
         }
-        .filebank-browser-children:not([hidden]) {
+        & .filebank-browser-children:not([hidden]) {
             display: block;
             margin-inline-start: 1rem;
             padding-inline-start: .75rem;
             border-inline-start: 1px solid var(--filebank-border);
         }
-        .filebank-open[aria-expanded=true] .icon {
+        & .filebank-open[aria-expanded=true] .icon {
             transform: rotate(90deg);
         }
     }
@@ -43,14 +43,14 @@
 
 .filebank-browser {
     &[data-layout=tree] {
-        .filebank-cards {
+        & .filebank-cards {
             display: block;
         }
-        .filebank-browser-tree-group {
+        & .filebank-browser-tree-group {
             display: block;
             margin-bottom: .5rem;
         }
-        .filebank-course-heading {
+        & .filebank-course-heading {
             display: flex;
             align-items: center;
             gap: .5rem;
@@ -67,47 +67,47 @@
 
 .filebank-browser {
     &[data-layout=tree] {
-        .filebank-tree-entries {
+        & .filebank-tree-entries {
             display: block;
             padding-inline-start: 1rem;
             border-inline-start: 1px solid var(--filebank-border);
         }
-        .filebank-card {
+        & .filebank-card {
             margin-bottom: .15rem;
             border-color: transparent;
             box-shadow: none;
         }
-        .filebank-card .card-body {
+        & .filebank-card .card-body {
             /* Tree layout must override the shared Boost card utilities. */
             /* stylelint-disable-next-line declaration-no-important */
             align-items: center !important;
         }
-        .filebank-card input {
+        & .filebank-card input {
             order: 0;
             margin-top: 0;
         }
-        .filebank-open {
+        & .filebank-open {
             order: 1;
         }
-        .filebank-card-content {
+        & .filebank-card-content {
             order: 2;
             grid-template-columns: auto minmax(0, 1fr) auto;
             grid-template-rows: auto;
             align-items: center;
             gap: .5rem;
         }
-        .filebank-card-kind {
+        & .filebank-card-kind {
             /* Tree layout must override the shared Boost card utilities. */
             /* stylelint-disable-next-line declaration-no-important */
             margin-bottom: 0 !important;
         }
-        .filebank-card-kind .filebank-chip {
+        & .filebank-card-kind .filebank-chip {
             display: none;
         }
-        .filebank-card-title {
+        & .filebank-card-title {
             margin-bottom: 0;
         }
-        .filebank-card-meta {
+        & .filebank-card-meta {
             /* Tree layout must override the shared Boost card utilities. */
             /* stylelint-disable-next-line declaration-no-important */
             border-top: 0 !important;
@@ -119,13 +119,13 @@
             padding-top: 0 !important;
             min-height: 0;
         }
-        .filebank-browser-tree-group[data-collapsed=true] > .filebank-tree-entries {
+        & .filebank-browser-tree-group[data-collapsed=true] > .filebank-tree-entries {
             display: none;
         }
-        .filebank-origin {
+        & .filebank-origin {
             display: none;
         }
-        .filebank-skeleton {
+        & .filebank-skeleton {
             grid-template-columns: 1fr;
         }
     }

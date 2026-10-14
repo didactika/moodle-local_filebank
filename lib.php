@@ -170,7 +170,7 @@ function local_filebank_output_fragment_migration(array $args): string {
             clean_param($state['digest'] ?? '', PARAM_ALPHANUM),
             clean_param($state['kind'] ?? '', PARAM_ALPHA),
             clean_param($state['id'] ?? -1, PARAM_INT),
-            clean_param($state['choice'] ?? '', PARAM_RAW_TRIMMED)
+            trim(clean_param($state['choice'] ?? '', PARAM_TEXT))
         );
     } else if (in_array($action, ['page', 'group', 'all', 'none'], true)) {
         \local_filebank\local\migration\plan_selection::save(
@@ -185,7 +185,7 @@ function local_filebank_output_fragment_migration(array $args): string {
         $result = \local_filebank\local\migration\plan_selection::state($planid, $state['visible'] ?? []);
         return html_writer::div('', '', ['data-filebank-selection-state' => json_encode($result)]);
     } else if ($action !== 'view') {
-        throw new invalid_parameter_exception('Unknown migration action');
+        throw new moodle_exception('invalidmigrationaction', 'local_filebank');
     }
     $data = \local_filebank\output\migration_report::data(
         $planid,

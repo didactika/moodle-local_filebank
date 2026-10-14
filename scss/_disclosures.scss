@@ -32,7 +32,7 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    .icon {
+    & .icon {
         margin: 0;
         width: .85rem;
         height: .85rem;
@@ -43,3 +43,25 @@ details[open] > summary > .filebank-disclosure-icon .icon {
     transform: rotate(90deg);
 }
 
+/* The funnel of the filters, with how many of them are on at its corner so the line does not grow when they are. */
+.filebank-filter-glyph {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.filebank-count-badge {
+    position: absolute;
+    top: -.6rem;
+    right: -.7rem;
+    min-width: 1.15rem;
+    height: 1.15rem;
+    padding: 0 .3rem;
+    border-radius: 1rem;
+    background: var(--filebank-primary);
+    color: #fff;
+    font-size: .7rem;
+    font-weight: 600;
+    line-height: 1.15rem;
+    text-align: center;
+}

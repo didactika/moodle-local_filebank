@@ -39,12 +39,14 @@ final class draft_state {
      * @param string $sesskey Session key.
      */
     public static function remember_view(string $token, array $view, string $sesskey): void {
-        global $SESSION;
         $scope = draft_scope::describe($token, $sesskey);
-        if (isset($scope['review']) && ($scope['view'] ?? []) !== $view) {
-            unset($SESSION->local_filebank_drafts[$token]['review']);
-        }
-        $SESSION->local_filebank_drafts[$token]['view'] = $view;
+        $discard = isset($scope['review']) && ($scope['view'] ?? []) !== $view;
+        draft_store::update($token, static function (array &$stored) use ($discard, $view): void {
+            if ($discard) {
+                unset($stored['review']);
+            }
+            $stored['view'] = $view;
+        });
     }
 
     /**
@@ -55,9 +57,10 @@ final class draft_state {
      * @param string $sesskey Session key.
      */
     public static function select_repository(string $token, string $name, string $sesskey): void {
-        global $SESSION;
         draft_scope::describe($token, $sesskey);
-        $SESSION->local_filebank_drafts[$token]['repositoryname'] = $name;
+        draft_store::update($token, static function (array &$stored) use ($name): void {
+            $stored['repositoryname'] = $name;
+        });
     }
 
     /**
@@ -69,7 +72,6 @@ final class draft_state {
      * @param string $sesskey Session key.
      */
     public static function select_picker(string $token, array $types, string $environment, string $sesskey): void {
-        global $SESSION;
         $scope = draft_scope::describe($token, $sesskey);
         if (($scope['environment'] ?? '') !== 'editor') {
             return;
@@ -77,19 +79,16 @@ final class draft_state {
         $types = (new \core_form\filetypes_util())->normalize_file_types($types) ?: ['*'];
         $links = $environment === 'editor' && in_array('*', $types, true);
         $limit = $environment === 'editor' && !$links ? 1 : material_selection::MAX_FILES;
-        if (
-            $scope['limits']['accepted_types'] !== $types || ($scope['limits']['selectionlimit'] ?? 0) !== $limit
-                || ($scope['editorlinks'] ?? false) !== $links
-        ) {
-            unset(
-                $SESSION->local_filebank_drafts[$token]['review'],
-                $SESSION->local_filebank_drafts[$token]['view'],
-                $SESSION->local_filebank_drafts[$token]['imported']
-            );
-        }
-        $SESSION->local_filebank_drafts[$token]['limits']['accepted_types'] = $types;
-        $SESSION->local_filebank_drafts[$token]['limits']['selectionlimit'] = $limit;
-        $SESSION->local_filebank_drafts[$token]['editorlinks'] = $links;
+        $changed = $scope['limits']['accepted_types'] !== $types || ($scope['limits']['selectionlimit'] ?? 0) !== $limit
+            || ($scope['editorlinks'] ?? false) !== $links;
+        draft_store::update($token, static function (array &$stored) use ($changed, $types, $limit, $links): void {
+            if ($changed) {
+                unset($stored['review'], $stored['view'], $stored['imported']);
+            }
+            $stored['limits']['accepted_types'] = $types;
+            $stored['limits']['selectionlimit'] = $limit;
+            $stored['editorlinks'] = $links;
+        });
     }
 
     /**
@@ -100,14 +99,15 @@ final class draft_state {
      * @param string $sesskey Session key.
      */
     public static function select_mode(string $token, string $mode, string $sesskey): void {
-        global $SESSION;
         $scope = draft_scope::describe($token, $sesskey);
         if (!in_array($mode, ['paths', 'folder', 'contents'], true)) {
             throw new \moodle_exception('invalidselection', 'local_filebank');
         }
         if (($scope['copymode'] ?? 'paths') !== $mode) {
-            unset($SESSION->local_filebank_drafts[$token]['review']);
-            $SESSION->local_filebank_drafts[$token]['copymode'] = $mode;
+            draft_store::update($token, static function (array &$stored) use ($mode): void {
+                unset($stored['review']);
+                $stored['copymode'] = $mode;
+            });
         }
     }
 
@@ -139,7 +139,7 @@ final class draft_state {
      * @param string $sesskey Current session key.
      */
     public static function select_destination(string $token, string $basepath, string $sesskey): void {
-        global $SESSION, $USER;
+        global $USER;
         $scope = draft_scope::describe($token, $sesskey);
         $basepath = material_selection::path($basepath);
         if (!$scope['limits']['subdirs'] && $basepath !== '/') {
@@ -158,8 +158,10 @@ final class draft_state {
             throw new \moodle_exception('invaliddraft', 'local_filebank');
         }
         if ($scope['basepath'] !== $basepath) {
-            unset($SESSION->local_filebank_drafts[$token]['review']);
-            $SESSION->local_filebank_drafts[$token]['basepath'] = $basepath;
+            draft_store::update($token, static function (array &$stored) use ($basepath): void {
+                unset($stored['review']);
+                $stored['basepath'] = $basepath;
+            });
         }
     }
 
@@ -173,14 +175,13 @@ final class draft_state {
      * @param string $sesskey Current session key.
      */
     public static function assert_review(string $token, int $profileid, array $items, string $digest, string $sesskey): void {
-        global $SESSION;
         $scope = draft_scope::describe($token, $sesskey);
         $review = $scope['review'] ?? null;
         if (
             !$review || $review['profileid'] !== $profileid || $review['items'] !== $items
                 || !hash_equals($review['digest'], $digest)
         ) {
-            unset($SESSION->local_filebank_drafts[$token]['review']);
+            self::discard_review($token);
             throw new \moodle_exception('batchconflict', 'local_filebank');
         }
     }
@@ -195,9 +196,10 @@ final class draft_state {
      * @return array Batch decisions and digest.
      */
     public static function review(string $token, int $profileid, array $items, string $sesskey): array {
-        global $SESSION;
         $scope = draft_scope::describe($token, $sesskey);
-        unset($SESSION->local_filebank_drafts[$token]['review'], $SESSION->local_filebank_drafts[$token]['imported']);
+        draft_store::update($token, static function (array &$stored): void {
+            unset($stored['review'], $stored['imported']);
+        });
         $review = draft_import::review(
             $scope['courseid'],
             $profileid,
@@ -208,9 +210,10 @@ final class draft_state {
             $scope['copymode'] ?? 'paths',
             ['roots' => $scope['view']['roots'] ?? [], 'renames' => $scope['view']['renames'] ?? []]
         );
-        $SESSION->local_filebank_drafts[$token]['review'] = [
-            'profileid' => $profileid, 'items' => $items, 'digest' => $review['digest'],
-        ];
+        $approval = ['profileid' => $profileid, 'items' => $items, 'digest' => $review['digest']];
+        draft_store::update($token, static function (array &$stored) use ($approval): void {
+            $stored['review'] = $approval;
+        });
         return $review;
     }
 
@@ -223,10 +226,9 @@ final class draft_state {
      * @return array Applied decisions.
      */
     public static function apply(string $token, string $digest, string $sesskey): array {
-        global $SESSION;
         $scope = draft_scope::describe($token, $sesskey);
         $review = $scope['review'] ?? null;
-        unset($SESSION->local_filebank_drafts[$token]['review']);
+        self::discard_review($token);
         if (!$review || !hash_equals($review['digest'], $digest)) {
             throw new \moodle_exception('batchconflict', 'local_filebank');
         }
@@ -241,13 +243,27 @@ final class draft_state {
             $scope['copymode'] ?? 'paths',
             ['roots' => $scope['view']['roots'] ?? [], 'renames' => $scope['view']['renames'] ?? []]
         );
-        $SESSION->local_filebank_drafts[$token]['imported'] = array_map(
+        $imported = array_map(
             static fn($operation) => [
                 'filepath' => $operation['filepath'], 'filename' => $operation['filename'],
                 'contenthash' => $operation['snapshot']['contenthash'],
             ],
             $result['operations']
         );
+        draft_store::update($token, static function (array &$stored) use ($imported): void {
+            $stored['imported'] = $imported;
+        });
         return $result;
+    }
+
+    /**
+     * Forget the approval of a binding, so the next import has to be reviewed again.
+     *
+     * @param string $token Form scope.
+     */
+    private static function discard_review(string $token): void {
+        draft_store::update($token, static function (array &$stored): void {
+            unset($stored['review']);
+        });
     }
 }

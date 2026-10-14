@@ -26,7 +26,7 @@ export const resolve = async editorid => {
         return {
             getBody: () => editable,
             selection: {collapse: () => editable.focus()},
-            insertContent: html => editable.insertAdjacentHTML('beforeend', html),
+            insertContent: html => editable.append(...new DOMParser().parseFromString(html, 'text/html').body.childNodes),
             save,
             undoManager: {transact: callback => callback()},
         };

@@ -4,7 +4,7 @@
     @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
     @template local_filebank/local/catalog/filters
     Compact native GET filters with optional advanced fields.
-    Example context (json): {"courseid":2,"profiles":[],"profileid":1,"filters":{},"modules":[],"filetypes":[],"action":"/local/filebank/course/index.php","actionurl":"/local/filebank/course/index.php"}
+    Example context (json): {"advancedcount":0,"courseid":2,"profiles":[],"profileid":1,"filters":{},"modules":[],"filetypes":[],"action":"/local/filebank/course/index.php","actionurl":"/local/filebank/course/index.php"}
 }}
 <form method="get" action="{{actionurl}}" class="card mb-4" aria-label="{{#str}}filtermaterials, local_filebank{{/str}}">
     <div class="card-body">
@@ -21,7 +21,15 @@
             </div>
         </div>
         <details class="mb-3" {{#advancedfilters}}open{{/advancedfilters}}>
-            <summary><span class="filebank-disclosure-icon" aria-hidden="true">{{#pix}}t/collapsedchevron, core{{/pix}}</span>{{#str}}morefilters, local_filebank{{/str}}</summary>
+            <summary>
+                <span class="filebank-disclosure-icon" aria-hidden="true">{{#pix}}t/collapsedchevron, core{{/pix}}</span>
+                <span class="filebank-filter-glyph" aria-hidden="true">
+                    {{#pix}}i/filter, core{{/pix}}
+                    {{#advancedcount}}<span class="filebank-count-badge" data-region="filters-count">{{advancedcount}}</span>{{/advancedcount}}
+                </span>
+                {{#str}}morefilters, local_filebank{{/str}}
+                {{#advancedcount}}<span class="sr-only visually-hidden">{{#str}}filtersapplied, local_filebank, {{advancedcount}}{{/str}}</span>{{/advancedcount}}
+            </summary>
             <div class="row mt-3">
                 {{#multipleprofiles}}<div class="col-md-6 mb-3">
                     <label for="cb-profile">{{#str}}profile, local_filebank{{/str}} </label> {{{filterhelp}}}

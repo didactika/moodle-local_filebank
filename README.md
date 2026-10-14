@@ -6,7 +6,7 @@
 
 *Find and reuse public course files across related courses*
 
-[![Release](https://img.shields.io/github/v/release/didactika/moodle-local_filebank?filter=v4.0.*&style=flat-square)](https://github.com/didactika/moodle-local_filebank/releases)
+[![Release](https://img.shields.io/github/v/release/didactika/moodle-local_filebank?filter=v*-m400&style=flat-square)](https://github.com/didactika/moodle-local_filebank/releases)
 [![Moodle](https://img.shields.io/badge/Moodle-4.0%E2%80%935.2-f98012?style=flat-square&logo=moodle&logoColor=white)](https://moodle.org)
 [![PHP](https://img.shields.io/badge/PHP-8.0+-777bb4?style=flat-square&logo=php&logoColor=white)](https://www.php.net)
 [![License](https://img.shields.io/badge/License-GPL_v3-blue?style=flat-square)](LICENSE)
@@ -37,7 +37,7 @@ Profiles define which courses belong together using named regular-expression cap
 
 ## Installation
 
-**Requirements:** Moodle 4.0–5.2, PHP 8.0 or newer, and the database requirements of the selected Moodle release. This distribution’s release is **4.0.0**.
+**Requirements:** Moodle 4.0–5.2, PHP 8.0 or newer, and the database requirements of the selected Moodle release.
 
 **From a release:** download the matching release ZIPs of both FileBank components, open **Site administration → Plugins → Install plugins**, upload the packages and follow the prompts.
 

@@ -42,7 +42,7 @@ if (data_submitted()) {
             required_param('digest', PARAM_ALPHANUM),
             required_param('kind', PARAM_ALPHA),
             required_param('id', PARAM_INT),
-            required_param('choice', PARAM_RAW_TRIMMED)
+            trim(required_param('choice', PARAM_TEXT))
         );
         $url->param('planid', $planid);
         $message = get_string('changessaved');
@@ -88,7 +88,7 @@ if (data_submitted()) {
         \local_filebank\local\migration\migration_executor::cancel($runid);
         $message = get_string('migrationcancelled', 'local_filebank');
     } else {
-        throw new invalid_parameter_exception('Unknown migration action');
+        throw new moodle_exception('invalidmigrationaction', 'local_filebank');
     }
     redirect($url, $message, null, \core\output\notification::NOTIFY_SUCCESS);
 }

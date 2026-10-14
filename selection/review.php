@@ -36,7 +36,9 @@ $token = required_param('scope', PARAM_ALPHANUM);
 require_login();
 $scope = draft_scope::describe($token, sesskey());
 $PAGE->set_course(get_course($scope['courseid']));
-$PAGE->set_context(context::instance_by_id($scope['contextid']));
+$context = context::instance_by_id($scope['contextid']);
+require_capability('local/filebank:reuse', $context);
+$PAGE->set_context($context);
 $PAGE->set_url('/local/filebank/selection/review.php', ['scope' => $token]);
 $PAGE->set_pagelayout('embedded');
 $PAGE->set_title(get_string('batchreview', 'local_filebank'));
@@ -45,7 +47,7 @@ $state = $scope['view'] ?? [];
 $renameerror = '';
 if (data_submitted()) {
     require_sesskey();
-    $removed = optional_param('removeitem', '', PARAM_RAW);
+    $removed = optional_param('removeitem', '', PARAM_TEXT);
     $removeditems = optional_param('removeselected', false, PARAM_BOOL)
         ? optional_param_array('removefiles', [], PARAM_ALPHANUM) : [];
     if ($removed !== '') {
@@ -57,7 +59,7 @@ if (data_submitted()) {
             array_map(static fn($hash) => 'file:' . $hash, $removeditems)
         )
     );
-    $renames = optional_param_array('renames', [], PARAM_RAW);
+    $renames = optional_param_array('renames', [], PARAM_TEXT);
     $hashes = array_map(static fn($value) => substr($value, 5), $state['selected']);
     $state['renames'] = array_intersect_key($renames, array_flip($hashes));
     try {

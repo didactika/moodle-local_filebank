@@ -77,10 +77,13 @@ if (optional_param('changesonly', false, PARAM_BOOL)) {
 }
 $PAGE->requires->js_call_amd('local_filebank/administration', 'init');
 $choices = $records;
-foreach (array_unique([$profile->activeid, $left, $right]) as $id) {
-    if ($id) {
-        $choices[$id] = $DB->get_record('local_filebank_revision', ['id' => $id, 'profileid' => $profileid], '*', MUST_EXIST);
+$wanted = array_values(array_filter(array_unique([$profile->activeid, $left, $right])));
+$found = $wanted ? $DB->get_records_list('local_filebank_revision', 'id', $wanted) : [];
+foreach ($wanted as $id) {
+    if (!isset($found[$id]) || (int)$found[$id]->profileid !== (int)$profileid) {
+        throw new dml_missing_record_exception('local_filebank_revision');
     }
+    $choices[$id] = $found[$id];
 }
 foreach ($choices as $version) {
     $data['choices'][] = ['id' => $version->id, 'number' => $version->revision,

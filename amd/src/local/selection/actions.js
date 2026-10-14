@@ -245,7 +245,7 @@ export const createActions = (form) => {
         entries.setAttribute('aria-busy', 'true');
         const skeleton = document.createElement('div');
         skeleton.className = 'filebank-tree-placeholder';
-        skeleton.innerHTML = '<span></span><span></span>';
+        skeleton.append(document.createElement('span'), document.createElement('span'));
         entries.append(skeleton);
         try {
             const {html} = await loadFragment('browser_tree', Number(form.dataset.contextid), {

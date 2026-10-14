@@ -10,7 +10,7 @@
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import Config from 'core/config';
+import Ajax from 'core/ajax';
 import Fragment from 'core/fragment';
 
 /**
@@ -33,8 +33,9 @@ export const loadFragment = (name, contextid, args) => new Promise((resolve, rej
  * @returns {Promise<Object|null>} Approved receipt, or null when unavailable.
  */
 export const getImportStatus = async(scope) => {
-    const url = Config.wwwroot + '/local/filebank/selection/status.php?'
-        + new URLSearchParams({scope, sesskey: Config.sesskey});
-    const response = await fetch(url, {credentials: 'same-origin'});
-    return response.ok ? await response.json() : null;
+    try {
+        return await Ajax.call([{methodname: 'local_filebank_get_import_status', args: {scope}}])[0];
+    } catch {
+        return null;
+    }
 };

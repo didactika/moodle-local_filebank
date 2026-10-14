@@ -79,6 +79,7 @@ $data = [
     'sesskey' => sesskey(), 'profiles' => display::options($options, (string)$profileid),
     'hasprofiles' => (bool)$profiles, 'filters' => $filters, 'reseturl' => $reseturl->out(false),
     'multipleprofiles' => count($profiles) > 1,
+    'advancedcount' => count(array_filter([$filters['shortname'], $filters['module'], $filters['mimetype']], 'strlen')),
     'advancedfilters' => $filters['shortname'] !== '' || $filters['module'] !== '' || $filters['mimetype'] !== '',
     'modules' => display::options([
         '' => get_string('allmodules', 'local_filebank'),

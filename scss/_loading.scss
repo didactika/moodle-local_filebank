@@ -18,7 +18,7 @@
 }
 
 .filebank-loading {
-    > .filebank-skeleton {
+    & > .filebank-skeleton {
         display: grid;
         height: 100%;
         align-content: start;
@@ -28,7 +28,7 @@
 }
 
 .filebank-skeleton {
-    span {
+    & span {
         border-radius: var(--filebank-radius);
         min-height: 7rem;
         background: color-mix(in srgb, var(--filebank-border) 35%, var(--filebank-surface));
@@ -38,7 +38,7 @@
 
 .filebank-browser {
     &[data-layout=list] {
-        .filebank-skeleton {
+        & .filebank-skeleton {
             grid-template-columns: 1fr;
         }
     }

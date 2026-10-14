@@ -24,5 +24,7 @@
  */
 
 require_once(__DIR__ . '/../../config.php');
-require_login();
+$course = get_course(required_param('courseid', PARAM_INT));
+require_login($course);
+require_capability('local/filebank:managecoursepolicy', context_course::instance($course->id));
 require(__DIR__ . '/course/policy.php');

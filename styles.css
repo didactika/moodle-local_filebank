@@ -147,6 +147,30 @@ details[open] > summary > .filebank-disclosure-icon .icon {
     transform: rotate(90deg);
 }
 
+/* The funnel of the filters, with how many of them are on at its corner so the line does not grow when they are. */
+
+.filebank-filter-glyph {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.filebank-count-badge {
+    position: absolute;
+    top: -0.6rem;
+    right: -0.7rem;
+    min-width: 1.15rem;
+    height: 1.15rem;
+    padding: 0 0.3rem;
+    border-radius: 1rem;
+    background: var(--filebank-primary);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.15rem;
+    text-align: center;
+}
+
 /* The embedded host has a stable viewport; only results scroll. */
 
 .filebank-native-host .fp-navbar {

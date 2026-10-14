@@ -34,7 +34,7 @@ if (data_submitted()) {
     require_sesskey();
     $action = optional_param('action', '', PARAM_ALPHA);
     $ids = optional_param_array('profiles', [], PARAM_INT);
-    $rowaction = optional_param('rowaction', '', PARAM_RAW);
+    $rowaction = optional_param('rowaction', '', PARAM_TEXT);
     if ($rowaction !== '') {
         if (!preg_match('/^(enable|disable|delete):[1-9][0-9]*$/', $rowaction)) {
             throw new invalid_parameter_exception('Invalid profile action');

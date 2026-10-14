@@ -31,6 +31,7 @@ use local_filebank\local\catalog\material_source;
 use local_filebank\local\profile\profiles;
 use local_filebank\local\selection\draft_scope;
 use local_filebank\local\selection\draft_state;
+use local_filebank\local\selection\draft_store;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -165,14 +166,13 @@ final class draft_scope_authorization_test extends draft_scope_fixture {
      * Scope validity does not carry over to another logged-in editor.
      */
     public function test_another_actor_cannot_use_scope(): void {
-        global $SESSION;
         [$form, $profileid, $source, $target, $context] = $this->fixture();
         $token = $form->control()->open_scope($context);
         $actor = $this->getDataGenerator()->create_user();
         $this->getDataGenerator()->enrol_user($actor->id, $target->course, 'editingteacher');
-        $scopes = $SESSION->local_filebank_drafts;
+        $scopes = draft_store::all();
         $this->setUser($actor);
-        $SESSION->local_filebank_drafts = $scopes;
+        draft_store::replace($scopes);
         $this->expectException(\moodle_exception::class);
         $this->expectExceptionMessage(get_string('formscopeunavailable', 'local_filebank'));
         draft_state::review($token, $profileid, [['cmid' => $source->cmid, 'filepath' => '/']], sesskey());
@@ -182,10 +182,11 @@ final class draft_scope_authorization_test extends draft_scope_fixture {
      * Expired bindings stop before material resolution or draft writes.
      */
     public function test_expired_scope_is_rejected(): void {
-        global $SESSION;
         [$form, $profileid, $source, , $context] = $this->fixture();
         $token = $form->control()->open_scope($context);
-        $SESSION->local_filebank_drafts[$token]['expires'] = time() - 1;
+        draft_store::update($token, static function (array &$stored): void {
+            $stored['expires'] = time() - 1;
+        });
         $this->expectException(\moodle_exception::class);
         $this->expectExceptionMessage(get_string('formscopeunavailable', 'local_filebank'));
         draft_state::review($token, $profileid, [['cmid' => $source->cmid, 'filepath' => '/']], sesskey());

@@ -70,7 +70,7 @@ export const createRows = async id => {
                 label.className = 'filebank-row-label text-muted';
                 label.textContent = column.label;
                 const help = document.createElement('span');
-                help.innerHTML = column.help || '';
+                help.append(...new DOMParser().parseFromString(column.help || '', 'text/html').body.childNodes);
                 label.append(help);
                 cell.append(label);
                 const input = document.createElement(column.options ? 'select' : 'input');

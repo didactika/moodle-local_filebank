@@ -250,14 +250,25 @@ final class plan_selection {
      */
     private static function page(int $planid, array $visible, array $included): void {
         global $DB;
-        foreach ($visible as $id) {
-            $DB->get_record('local_filebank_operation', ['id' => $id, 'planid' => $planid], '*', MUST_EXIST);
-            $DB->set_field(
-                'local_filebank_operation',
-                'included',
-                in_array($id, $included, true) ? 1 : 0,
-                ['id' => $id]
-            );
+        $visible = array_values(array_unique(array_map('intval', $visible)));
+        if (!$visible) {
+            return;
+        }
+        [$insql, $params] = $DB->get_in_or_equal($visible, SQL_PARAMS_NAMED, 'visible');
+        $found = $DB->count_records_select(
+            'local_filebank_operation',
+            'planid = :planid AND id ' . $insql,
+            $params + ['planid' => $planid]
+        );
+        if ($found !== count($visible)) {
+            throw new \dml_missing_record_exception('local_filebank_operation');
+        }
+        $included = array_map('intval', $included);
+        foreach ([1 => array_intersect($visible, $included), 0 => array_diff($visible, $included)] as $value => $ids) {
+            if ($ids) {
+                [$insql, $params] = $DB->get_in_or_equal(array_values($ids), SQL_PARAMS_NAMED, 'chosen');
+                $DB->set_field_select('local_filebank_operation', 'included', $value, 'id ' . $insql, $params);
+            }
         }
     }
 

@@ -97,7 +97,7 @@ export const createBulkActions = (form) => {
                     toggle.value = state.action + ':' + state.id;
                     toggle.setAttribute('aria-label', state.label);
                     toggle.title = state.label;
-                    toggle.innerHTML = state.icon;
+                    toggle.replaceChildren(...new DOMParser().parseFromString(state.icon, 'text/html').body.childNodes);
                 });
                 const [message] = await getStrings([{key: 'changessaved', component: 'core'}]);
                 await addToast(message, {type: 'success'});
